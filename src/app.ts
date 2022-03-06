@@ -1,11 +1,19 @@
+import 'dotenv/config'
 import express from 'express';
+import Routes from './route/routes';
+import router from './route/routes';
+import dbConnect from './config/database';
+import logger from 'morgan';
+
+const { PORT, HOST } = process.env;
+
 const app = express();
-const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+app.use(logger('combined'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
-});
+app.listen(+PORT, HOST, () => {
+  dbConnect();
+  Routes(app);
+})
