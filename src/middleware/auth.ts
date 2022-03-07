@@ -1,26 +1,38 @@
-import { NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { get } from "lodash";
 import { createAccessToken, reIssueAccessToken } from "../service/session.service";
 import { decode } from "../utils/jwt-utils";
 
-interface props {
-  req: Request,
-  res: Response,
-  next: NextFunction,
-}
+const Auth = async (req: Request, res: Response, next: NextFunction) => {
+  const accessToken = get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
+  const refreshToken = get(req, "headers.x-refresh");
 
-const Auth = async (props) => {
-  const accessToken = get(props.req, "headers.authorization", "").replace(/^Bearer\s/, "");
-  const refreshToken = get(props.req, "headers.x-refresh");
+  const { valid, expired, decoded } = decode(accessToken);
 
-  const { valid, expired } = decode(accessToken);
+  if (decoded) {
+    // @ts-ignore
+    req.user = decoded;
+
+    return next();
+  }
 
   if (expired && refreshToken) {
     const newAccessToken = await reIssueAccessToken(refreshToken);
-    return props.next();
+
+    if (newAccessToken) {
+      // Add the new access token to the response header
+      res.setHeader("x-access-token", newAccessToken);
+
+      const { decoded } = decode(newAccessToken);
+
+      // @ts-ignore
+      req.user = decoded;
+    }
+
+    return next();
   }
 
-  return props.next();
+  return next();
 }
 
 export default Auth;

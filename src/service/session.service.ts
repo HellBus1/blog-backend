@@ -47,10 +47,7 @@ const reIssueAccessToken = async (refreshToken: string) => {
   return accessToken;
 }
 
-const updateSession = async (
-  query: FilterQuery<SessionDocument>,
-  update: UpdateQuery<SessionDocument>
-) => {
+const updateSession = async (query: FilterQuery<SessionDocument>, update: UpdateQuery<SessionDocument>) => {
   return SessionModel.updateOne(query, update);
 }
 
