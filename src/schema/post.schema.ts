@@ -1,4 +1,4 @@
-import { object, string } from "yup";
+import { object, string, array, number } from "yup";
 
 const payload = {
   body: object({
@@ -6,12 +6,13 @@ const payload = {
     body: string()
       .required("Body is required")
       .min(120, "Body is too short - should be 120 chars minimum."),
+    tags: array().required().min(1, "Post must have tags"),
   }),
 };
 
 const params = {
   params: object({
-    postId: string().required("postId is required"),
+    id: string().required("id is required"),
   }),
 };
 

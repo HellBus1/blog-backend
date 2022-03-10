@@ -12,8 +12,6 @@ const decode = (token: string): JwtResponse => {
   try {
     const decoded = jwt.verify(token, PRIVATE_KEY);
 
-    console.log(`decoded result ${decoded}`);
-
     return {
       valid: true,
       expired: false,

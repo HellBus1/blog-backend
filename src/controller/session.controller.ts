@@ -41,7 +41,7 @@ const createUserSessionHandler = async (req: Request, res: CustomResponse<BaseRe
       // send refresh & access token back
       return res.status(HttpStatusCode.OK).send({
         status_code: HttpStatusCode.OK,
-        message: HttpStatusMessage.INVALID_USERNAME_AND_PASSWORD,
+        message: HttpStatusMessage.SUCCESS,
         data: { accessToken, refreshToken }
       });
 
