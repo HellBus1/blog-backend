@@ -1,5 +1,6 @@
 import { AnySchema } from "yup";
 import { Request, Response, NextFunction } from "express";
+import { HttpStatusCode } from "../utils/enumeration";
 
 const validateRequest = (schema: AnySchema) => async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -11,8 +12,11 @@ const validateRequest = (schema: AnySchema) => async (req: Request, res: Respons
 
     return next();
   } catch (e) {
-    console.log(e);
-    return res.status(400).send(e.errors);
+    return res.status(HttpStatusCode.BAD_REQUEST).send({
+      status_code: HttpStatusCode.BAD_REQUEST,
+      message: e.message,
+      data: null
+    });
   }
 };
 
