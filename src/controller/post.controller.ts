@@ -25,4 +25,25 @@ const createPostHandler = async (req: CustomRequest<PostDocument>, res: CustomRe
   }
 }
 
+const editPostHandler = async (req: CustomRequest<PostDocument>, res: CustomResponse<BaseResponse<PostDocument>>) => {
+  const userId: string = get(req, "user._id");
+  const postId: string = get(req, "params.postId")
+  const reqBody: PostDocument = req.body;
+
+  try {
+    const postCreateResult = await createPost({ ...reqBody, author: userId });
+    return res.status(HttpStatusCode.OK).send({
+      status_code: HttpStatusCode.OK,
+      message: HttpStatusMessage.SUCCESS,
+      data: postCreateResult
+    });
+  } catch (e) {
+    return res.status(HttpStatusCode.INTERNAL_SERVER).send({
+      status_code: HttpStatusCode.INTERNAL_SERVER,
+      message: e.message,
+      data: null
+    });
+  }
+}
+
 export { createPostHandler }

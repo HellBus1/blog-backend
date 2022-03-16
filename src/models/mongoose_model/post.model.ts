@@ -7,6 +7,7 @@ interface PostDocument extends mongoose.Document {
   body: string;
   likes: number;
   tags: string[];
+  thumbnail: string,
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +25,7 @@ const PostSchema = new mongoose.Schema(
       }
     ],
     likes: { type: Number, default: true },
+    thumbnail: { type: String, default: true }
   },
   { timestamps: true }
 )
